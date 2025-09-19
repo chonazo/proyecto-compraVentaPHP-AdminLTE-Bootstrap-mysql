@@ -103,16 +103,6 @@ Asegúrate de tener un usuario activo en la tabla `usuarios`:
 
 ---
 
-## 📸 Capturas de pantalla
-
-### Pantalla de Login
-![Login](./assets/img/screenshots/login.png)
-
-### Dashboard
-![Dashboard](./assets/img/screenshots/dashboard.png)
-
----
-
 ## 📖 Créditos
 
 - 💻 **Desarrollado por:** Jorge Ibarrola (Chono Pesoa).
