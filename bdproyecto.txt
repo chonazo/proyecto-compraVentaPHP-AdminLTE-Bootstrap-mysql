@@ -1,0 +1,191 @@
+SQL comando usados
+========================
+INSERT INTO `sysweb`.`usuarios` (`username`, `name_user`, `password`, `email`, `telefono`, `permisos_acceso`, `status`) 
+VALUES ('admin', 'Admin', '827ccb0eea8a706c4c34a16891f84e7b', '123@gmail.com', '0985632136', 'super_admin', 'activo'); --admin 12345
+
+CREATE TABLE usuarios (
+    id_user INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(150) NOT NULL,
+    name_user VARCHAR(150) NOT NULL,
+    password VARCHAR(150) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    telefono VARCHAR(39),
+    foto VARCHAR(300),
+    permisos_acceso VARCHAR(300),
+    status VARCHAR(15) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE departamento (
+    id_departamento INT AUTO_INCREMENT PRIMARY KEY,
+    dep_descripcion VARCHAR(35) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE ciudad (
+    cod_ciudad INT AUTO_INCREMENT PRIMARY KEY,
+    descrip_ciudad VARCHAR(25) NOT NULL,
+    id_departamento INT NOT NULL,
+    CONSTRAINT fk_ciudad_departamento FOREIGN KEY (id_departamento)
+        REFERENCES departamento (id_departamento)
+        ON UPDATE CASCADE
+        ON DELETE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE clientes (
+    id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+    ci_ruc VARCHAR(10) NOT NULL,
+    cli_nombre VARCHAR(30) NOT NULL,
+    cli_apellido VARCHAR(50) NOT NULL,
+    cli_direccion VARCHAR(50),
+    cli_telefono VARCHAR(20), -- mejor VARCHAR que INT para teléfonos
+    cod_ciudad INT,
+    CONSTRAINT fk_clientes_ciudad FOREIGN KEY (cod_ciudad)
+        REFERENCES ciudad (cod_ciudad)
+        ON UPDATE CASCADE
+        ON DELETE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE deposito (
+    cod_deposito INT AUTO_INCREMENT PRIMARY KEY,
+    descrip VARCHAR(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE u_medida (
+    id_u_medida INT AUTO_INCREMENT PRIMARY KEY,
+    u_descrip VARCHAR(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE tipo_producto (
+    cod_tipo_prod INT AUTO_INCREMENT PRIMARY KEY,
+    t_p_descrip VARCHAR(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE producto (
+    cod_producto INT AUTO_INCREMENT PRIMARY KEY,
+    cod_tipo_prod INT NOT NULL,
+    id_u_medida INT NOT NULL,
+    p_descrip VARCHAR(50) NOT NULL,
+    precio INT NOT NULL,
+    CONSTRAINT fk_producto_tipo FOREIGN KEY (cod_tipo_prod)
+        REFERENCES tipo_producto (cod_tipo_prod)
+        ON UPDATE CASCADE
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_producto_um FOREIGN KEY (id_u_medida)
+        REFERENCES u_medida (id_u_medida)
+        ON UPDATE CASCADE
+        ON DELETE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE proveedor (
+    cod_proveedor INT AUTO_INCREMENT PRIMARY KEY,
+    razon_social VARCHAR(100) NOT NULL,
+    ruc VARCHAR(20) NOT NULL UNIQUE, 
+    direccion VARCHAR(50),
+    telefono VARCHAR(30) NOT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE compra (
+    cod_compra INT AUTO_INCREMENT PRIMARY KEY,
+    cod_proveedor INT NOT NULL,
+    nro_factura VARCHAR(30) NOT NULL,
+    fecha DATE NOT NULL,
+    hora TIME NOT NULL,
+    estado VARCHAR(20) NOT NULL,
+    cod_deposito INT NOT NULL,
+    total_compra INT, -- ajustado a INT como prefieres
+    id_user INT,
+    CONSTRAINT fk_compra_proveedor FOREIGN KEY (cod_proveedor)
+        REFERENCES proveedor (cod_proveedor)
+        ON UPDATE CASCADE
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_compra_deposito FOREIGN KEY (cod_deposito)
+        REFERENCES deposito (cod_deposito)
+        ON UPDATE CASCADE
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_compra_usuario FOREIGN KEY (id_user)
+        REFERENCES usuarios (id_user)
+        ON UPDATE CASCADE
+        ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE detalle_compra (
+    cod_producto INT NOT NULL,
+    cod_compra INT NOT NULL,
+    cod_deposito INT NOT NULL,
+    precio INT NOT NULL,
+    cantidad INT NOT NULL,
+    CONSTRAINT pk_detalle_compra PRIMARY KEY (cod_producto, cod_compra),
+    CONSTRAINT fk_detalle_compra_compra FOREIGN KEY (cod_compra)
+        REFERENCES compra (cod_compra)
+        ON UPDATE CASCADE
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_detalle_compra_deposito FOREIGN KEY (cod_deposito)
+        REFERENCES deposito (cod_deposito)
+        ON UPDATE CASCADE
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_detalle_compra_producto FOREIGN KEY (cod_producto)
+        REFERENCES producto (cod_producto)
+        ON UPDATE CASCADE
+        ON DELETE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE stock (
+    cod_deposito INT NOT NULL,
+    cod_producto INT NOT NULL,
+    cantidad INT NOT NULL,
+    CONSTRAINT pk_stock PRIMARY KEY (cod_deposito, cod_producto),
+    CONSTRAINT fk_stock_deposito FOREIGN KEY (cod_deposito)
+        REFERENCES deposito (cod_deposito)
+        ON UPDATE CASCADE
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_stock_producto FOREIGN KEY (cod_producto)
+        REFERENCES producto (cod_producto)
+        ON UPDATE CASCADE
+        ON DELETE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE venta (
+    cod_venta INT AUTO_INCREMENT PRIMARY KEY,
+    id_cliente INT NOT NULL,
+    fecha DATE NOT NULL,
+    hora TIME NOT NULL,
+    total_venta INT NOT NULL,
+    estado VARCHAR(15) NOT NULL,
+    nro_factura INT,
+    CONSTRAINT fk_venta_cliente FOREIGN KEY (id_cliente)
+        REFERENCES clientes (id_cliente)
+        ON UPDATE CASCADE
+        ON DELETE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE det_venta (
+    cod_venta INT NOT NULL,
+    cod_producto INT NOT NULL,
+    cod_deposito INT NOT NULL,
+    det_precio_unit INT NOT NULL,
+    det_cantidad INT NOT NULL,
+    CONSTRAINT pk_det_venta PRIMARY KEY (cod_venta, cod_producto),
+    CONSTRAINT fk_det_venta_venta FOREIGN KEY (cod_venta)
+        REFERENCES venta (cod_venta)
+        ON UPDATE CASCADE
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_det_venta_producto FOREIGN KEY (cod_producto)
+        REFERENCES producto (cod_producto)
+        ON UPDATE CASCADE
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_det_venta_deposito FOREIGN KEY (cod_deposito)
+        REFERENCES deposito (cod_deposito)
+        ON UPDATE CASCADE
+        ON DELETE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE tmp (
+    id_tmp INT AUTO_INCREMENT PRIMARY KEY,
+    id_producto INT NOT NULL,
+    cantidad_tmp INT NOT NULL,
+    precio_tmp INT NOT NULL,
+    session_id VARCHAR(765) NOT NULL,
+    CONSTRAINT fk_tmp_producto FOREIGN KEY (id_producto)
+        REFERENCES producto (cod_producto)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
