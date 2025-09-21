@@ -103,20 +103,8 @@ Asegúrate de tener un usuario activo en la tabla `usuarios`:
 
 👉 **Nota:** `21232f297a57a5a743894a0e4a801fc3` corresponde a la contraseña **admin** en MD5.
 
----
-
-## 📸 Capturas de pantalla
-
-### Pantalla de Login
-![Login](./assets/img/screenshots/login.png)
-
-### Dashboard
-![Dashboard](./assets/img/screenshots/dashboard.png)
-
----
-
 ## ✅ Cambios realizados en el proyecto
-
+- Fecha 20/09/2025
 ### 1. Centralización del acceso en index.php
 - Se implementó un **middleware de control de acceso**:
   - `LoginController` queda como único acceso público.
@@ -140,7 +128,7 @@ Asegúrate de tener un usuario activo en la tabla `usuarios`:
   - Mensaje de bienvenida al usuario.
   - Bloques de acción generados dinámicamente con bucle (`foreach`), escalables y responsive.
   - Fondo de bloques y estilos de lista personalizados.
-  - Footer y enlaces correctamente posicionados.
+  - Footer y enlaces correctamente posicionados. 
 
 ---
 
