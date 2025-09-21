@@ -9,17 +9,47 @@
 
 <section class="content">
     <div class="row">
-        <div class="col-lg-12">
-            <div class="box box-primary">
-                <div class="box-body">
-                    <p>
-                        Hola, **<?php echo htmlspecialchars($_SESSION['name_user'] ?? ''); ?>**. Bienvenido a la aplicación web.
-                    </p>
-                    <p>
-                        A través del menú lateral, puedes acceder a las diferentes funcionalidades de la aplicación.
-                    </p>
-                </div>
-            </div>
+        <div class="col-lg-12 col-xs-12">
+            <div class="alert alert-info alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <p style="font-size:15px">
+                    <i class="icon fa fa-user"></i> Bienvenido/a <strong><?php echo htmlspecialchars($data['user']['name_user'] ?? ''); ?></strong> 
+                    a la aplicación: <strong>SysWeb</strong>
+                </p>
+            </div> 
         </div>
     </div>
+
+    <?php
+    $permisos = htmlspecialchars($data['user']['permisos_acceso'] ?? '');
+    
+    $bloques = [
+        ['titulo' => 'Compras', 'color' => '#00c0ef', 'icon' => 'glyphicon glyphicon-piggy-bank', 'controller' => 'Compras', 'descripcion' => ['Registrar', 'la Compra', 'de Productos']],
+        ['titulo' => 'Ventas', 'color' => '#00a65a', 'icon' => 'fa fa-cart-plus', 'controller' => 'Ventas', 'descripcion' => ['Registrar', 'Ventas', 'de Productos']],
+        ['titulo' => 'Stock', 'color' => '#f39c12', 'icon' => 'fa fa-area-chart', 'controller' => 'Stock', 'descripcion' => ['Visualizar', 'Stock', 'de Productos']],
+    ];
+    ?>
+
+    <?php if($permisos == 'super_admin'): ?>
+    <h2>Formulario de movimiento</h2>
+    <div class="row">
+        <?php foreach ($bloques as $b): ?>
+        <div class="col-lg-4 col-md-6 col-xs-12">
+            <div class="small-box" style="background-color: <?= $b['color']; ?>; color:#fff;">
+                <div class="inner">
+                    <p><strong><?= $b['titulo']; ?></strong></p>
+                    <ul style="margin:0; padding-left:20px;">
+                        <?php foreach ($b['descripcion'] as $desc): ?>
+                        <li><?= $desc; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+                <div class="icon"><i class="<?= $b['icon']; ?>"></i></div>
+                <a href="index.php?controller=<?= $b['controller']; ?>&action=index" class="small-box-footer" title="Acceder"><i class="fa fa-plus"></i></a>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
 </section>
+

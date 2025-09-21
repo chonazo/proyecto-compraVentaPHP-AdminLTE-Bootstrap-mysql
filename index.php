@@ -1,16 +1,17 @@
 <?php
-
+// Aqui se inicia la session del usuario, unico punto de entrada del usuario, todas las peticiones del usuario pasan por aqui index.php
 session_start();
 
-// 1. Cargamos la conexión a la bd
+// Cargamos la conexión a la bd
 require_once 'config/Conexion.php';
 
-// 2. realizamos funcion autocarga de clases, para cargar automaticamente los controladores y modelos
+/* 1. Contrimos el nombre de las clases automaticamente.
+Este metodo va construir el nombre de nuestras clases y los va a buscar en las carpetas controller y model*/
 spl_autoload_register(function ($className) {
     // definimos las carpetas donde buscar las clases
     $folders = ['controller', 'model'];
 
-    foreach ($folders as $folder) {
+    foreach ($folders as $folder) {//Buscamos en cada carpeta si existen las clases esto cosntruira por ejemplo 'controller/UserController.php'
         $path = $folder . '/' . $className . '.php';
         if (file_exists($path)) {
             require_once $path;
@@ -19,32 +20,41 @@ spl_autoload_register(function ($className) {
     }
 });
 
-// 3. Obtenemos el nombre del controlador y la acción de la URL
+// Obtenemos el nombre del controlador y la acción de la URL
 $controllerName = $_GET['controller'] ?? 'Login';
 $action = $_GET['action'] ?? 'login';
 
-// construir el nombre completo de la clase del controlador
+// construir el nombre completo de la clase del controlador por ejemplo 'UserController'
 $controllerClass = $controllerName . 'Controller';
 
-// 4. realizamos la logica del enrutador
-if (class_exists($controllerClass) && method_exists($controllerClass, $action)) {
 
-    // usamos el 'try-catch' para manejar si el constructor requiere la conexión o no
-    try {
-        $reflectionMethod = new ReflectionMethod($controllerClass, '__construct'); // Instanciamos el controlador y pasamos la conexión PDO si es necesaria
-        if ($reflectionMethod->getNumberOfParameters() > 0) {
+// 2. Control de acceso: si no hay sesión activa, solo permitir acceso al LoginController (middleware simple)
+$publicControllers = ['Login'];
+
+// Verificamos si la sesión esta activa y si el controlador solicitado es publico
+if (!in_array($controllerName, $publicControllers) && !isset($_SESSION['id_user'])) {// Se usa id_user para mayor seguridad en ves de username
+    header("Location: index.php?controller=Login&action=login&alert=3");// Si no está logueado y no está intentando acceder a un controlador público
+    exit();
+}
+
+// 5. realizamos la logica del enrutador
+if (class_exists($controllerClass) && method_exists($controllerClass, $action)) { //verificamos que la clase y el metodo existan
+    
+    try { // usamos el 'try-catch' para manejar si el constructor requiere la conexión o no
+        $reflectionMethod = new ReflectionMethod($controllerClass, '__construct'); // Buscamos en constructor de la clase y si necesita parametros
+        if ($reflectionMethod->getNumberOfParameters() > 0) { // si el constructor necesita para metros le pasamos la conexion
             $controller = new $controllerClass($pdo);
         } else {
-            $controller = new $controllerClass();
+            $controller = new $controllerClass(); // si no necesita parametros lo instanciamos normalmente
         }
     } catch (ReflectionException $e) {
         $controller = new $controllerClass();
     }
     
-    // Ejecutamos la accion del controlador
+    // 6. Ejecutamos la accion del controlador
     $controller->$action();
 } else {
-    // Si el controlador o la acción no existen redirigir al login
+    // 7. Si el controlador o la acción no existen redirigir al login
     header("Location: index.php?controller=Login&action=login&error=not_found");
     exit();
 }

@@ -1,4 +1,7 @@
 <?php
+require_once __DIR__ . '/../model/UserModel.php';
+require_once __DIR__ . '/../core/View.php';
+
 class DashboardController {
 
     private $userModel;
@@ -13,30 +16,15 @@ class DashboardController {
         header("Pragma: no-cache");
         header("Expires: 0");
 
-        if (!isset($_SESSION['id_user'])) {
-            header("Location: index.php?controller=Login&action=login&alert=3");
-            exit();
-        }
-
-        // Obtener la información del usuario
+        // Verificamos si el usuario ha iniciado sesión
         $user = $this->userModel->getUserInfo($_SESSION['id_user']);
-        
-        // 1. Capturar el HTML para el menú superior
-        ob_start();
-        include __DIR__ . '/../view/template/top_menu.php';
-        $topMenu = ob_get_clean();
 
-        // 2. Capturar el HTML para el menú lateral
-        ob_start();
-        include __DIR__ . '/../view/template/sidebar_menu.php';
-        $sidebarMenu = ob_get_clean();
+        // Creamos un array con los datos que la vista necesita.
+        $data = [
+            'user' => $user
+        ];
         
-        // 3. Capturar el HTML para el contenido del dashboard
-        ob_start();
-        include __DIR__ . '/../view/dashboard.php';
-        $pageContent = ob_get_clean();
-
-        // 4. Cargar la plantilla principal (main.php)
-        include __DIR__ . '/../view/template/main.php';
+        
+        View::render('dashboard', $data);
     }
 }
