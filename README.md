@@ -135,3 +135,48 @@ Eres libre de usarlo, modificarlo y adaptarlo para tus propios proyectos 🚀.
 - En este estado, el proyecto ya está preparado para albergar las **clases CRUD principales**.
 
 ---
+
+-- COntinuacion de trabajos
+1. Centralización del acceso en index.php
+
+Se implementó un middleware de control de acceso:
+
+LoginController queda como único acceso público.
+
+Si el usuario no ha iniciado sesión, es redirigido automáticamente al login con alert=3.
+
+El router ahora:
+
+Verifica la existencia de los controladores solicitados.
+
+Valida la sesión activa antes de permitir el acceso a otros módulos.
+
+Realiza la instanciación de los controladores de manera práctica y segura.
+
+De esta forma, todas las acciones del usuario se centralizan en index.php, asegurando un único punto de entrada al sistema.
+
+2. Implementación del motor de vistas (core/View.php)
+
+Se creó la carpeta core/ con la clase View.php.
+
+View::render() se encarga de:
+
+Renderizar la plantilla principal main.php (layout base del sistema).
+
+Incrustar en el body el contenido dinámico de cada módulo (por ejemplo: dashboard.php).
+
+Se reestructuraron MainController y DashboardController para usar este mecanismo, eliminando los require_once manuales.
+
+Ahora las vistas reciben datos de forma controlada mediante arrays $data, evitando el acceso directo a variables globales como $_SESSION.
+
+3. Diseño del Dashboard
+
+Se terminó el diseño de dashboard.php:
+
+Mensaje de bienvenida al usuario.
+
+Bloques de acción generados dinámicamente con bucle (foreach), escalables y responsive.
+
+Fondo de bloques y estilos de lista personalizados.
+
+Footer y enlaces correctamente posicionados.
