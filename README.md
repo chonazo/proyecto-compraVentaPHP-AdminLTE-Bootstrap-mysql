@@ -12,7 +12,7 @@ Incluye un **módulo de autenticación de usuarios** con login/logout, manejo de
 - 🛡️ Permisos de acceso por roles (ejemplo: `super_admin`, otros roles).
 - 🗂️ Estructura **MVC** clara: separación de controladores, modelos y vistas.
 - 🎨 Interfaz con **Bootstrap 3**, **Font Awesome** y **AdminLTE**.
-- 📊 Dashboard inicial con bienvenida al usuario.
+- 📊 Dashboard inicial con bienvenida al usuario y bloques de acción.
 - 📂 Menú lateral dinámico según permisos del usuario.
 
 ---
@@ -36,6 +36,8 @@ Incluye un **módulo de autenticación de usuarios** con login/logout, manejo de
 │       ├── main_menu.php     # Layout principal
 │       ├── sidebar_menu.php  # Menú lateral dinámico
 │       └── top_menu.php      # Menú superior con perfil/cerrar sesión
+├── core/
+│   └── View.php              # Motor de vistas
 ├── assets/                   # CSS, JS, imágenes y plugins
 ├── index.php                 # Enrutador principal del sistema
 └── README.md                 # Documentación del proyecto
@@ -45,7 +47,7 @@ Incluye un **módulo de autenticación de usuarios** con login/logout, manejo de
 
 ## ⚙️ Requisitos
 
-- **PHP >= 8.0.30 **.
+- **PHP >= 8.0.30**.
 - **MySQL**.
 - Extensión **PDO** habilitada.
 - Servidor local como **XAMPP**.
@@ -103,11 +105,50 @@ Asegúrate de tener un usuario activo en la tabla `usuarios`:
 
 ---
 
+## 📸 Capturas de pantalla
+
+### Pantalla de Login
+![Login](./assets/img/screenshots/login.png)
+
+### Dashboard
+![Dashboard](./assets/img/screenshots/dashboard.png)
+
+---
+
+## ✅ Cambios realizados en el proyecto
+
+### 1. Centralización del acceso en index.php
+- Se implementó un **middleware de control de acceso**:
+  - `LoginController` queda como único acceso público.
+  - Si el usuario no ha iniciado sesión, es redirigido automáticamente al login con `alert=3`.
+- El router ahora:
+  - Verifica la existencia de los controladores solicitados.
+  - Valida la sesión activa antes de permitir el acceso a otros módulos.
+  - Realiza la instanciación de los controladores de manera práctica y segura.
+- De esta forma, todas las acciones del usuario se centralizan en `index.php`, asegurando un único punto de entrada al sistema.
+
+### 2. Implementación del motor de vistas (`core/View.php`)
+- Se creó la carpeta `core/` con la clase `View.php`.
+- `View::render()` se encarga de:
+  - Renderizar la plantilla principal `main.php` (layout base del sistema).
+  - Incrustar en el body el contenido dinámico de cada módulo (por ejemplo: `dashboard.php`).
+- Se reestructuraron `MainController` y `DashboardController` para usar este mecanismo, eliminando los `require_once` manuales.
+- Ahora las vistas reciben datos de forma controlada mediante arrays `$data`, evitando el acceso directo a variables globales como `$_SESSION`.
+
+### 3. Diseño del Dashboard
+- Se terminó el diseño de `dashboard.php`:
+  - Mensaje de bienvenida al usuario.
+  - Bloques de acción generados dinámicamente con bucle (`foreach`), escalables y responsive.
+  - Fondo de bloques y estilos de lista personalizados.
+  - Footer y enlaces correctamente posicionados.
+
+---
+
 ## 📖 Créditos
 
-- 💻 **Desarrollado por:** Jorge Ibarrola (Chono Pesoa).
-- 🎨 Plantilla basada en [AdminLTE](https://adminlte.io).
-- 🗄️ Base de datos: MySQL.
+- 💻 **Desarrollado por:** Jorge Ibarrola (Chono Pesoa).  
+- 🎨 Plantilla basada en [AdminLTE](https://adminlte.io).  
+- 🗄️ Base de datos: MySQL.  
 - 🛠️ Backend: PHP (PDO + MVC).
 
 ---
@@ -117,66 +158,3 @@ Asegúrate de tener un usuario activo en la tabla `usuarios`:
 Este proyecto se distribuye bajo la licencia **MIT**.  
 Eres libre de usarlo, modificarlo y adaptarlo para tus propios proyectos 🚀.
 
----
-
-## 📝 Changelog / Historial de avances
-
-### ✅ Versión inicial
-- Creación del proyecto **SysWeb** con la base de datos `sysweb` y archivo `conexion.php`.
-- Se implementó `index.php` como **ruteador principal** del proyecto.
-- Se creó la vista **Login (`login.php`)**, junto con el modelo `UserModel.php` y el controlador `LoginController.php`.
-  - Se probó conexión a la base de datos y logueo exitoso.
-  - Se integró **AdminLTE** con diseño de página inicial.
-- Se creó la vista **Dashboard (`dashboard.php`)** con los templates:
-  - `main.php`
-  - `top_menu.php`
-  - `sidebar_menu.php`
-  - `DashboardController.php` y `MainController.php`
-- En este estado, el proyecto ya está preparado para albergar las **clases CRUD principales**.
-
----
-
--- COntinuacion de trabajos
-1. Centralización del acceso en index.php
-
-Se implementó un middleware de control de acceso:
-
-LoginController queda como único acceso público.
-
-Si el usuario no ha iniciado sesión, es redirigido automáticamente al login con alert=3.
-
-El router ahora:
-
-Verifica la existencia de los controladores solicitados.
-
-Valida la sesión activa antes de permitir el acceso a otros módulos.
-
-Realiza la instanciación de los controladores de manera práctica y segura.
-
-De esta forma, todas las acciones del usuario se centralizan en index.php, asegurando un único punto de entrada al sistema.
-
-2. Implementación del motor de vistas (core/View.php)
-
-Se creó la carpeta core/ con la clase View.php.
-
-View::render() se encarga de:
-
-Renderizar la plantilla principal main.php (layout base del sistema).
-
-Incrustar en el body el contenido dinámico de cada módulo (por ejemplo: dashboard.php).
-
-Se reestructuraron MainController y DashboardController para usar este mecanismo, eliminando los require_once manuales.
-
-Ahora las vistas reciben datos de forma controlada mediante arrays $data, evitando el acceso directo a variables globales como $_SESSION.
-
-3. Diseño del Dashboard
-
-Se terminó el diseño de dashboard.php:
-
-Mensaje de bienvenida al usuario.
-
-Bloques de acción generados dinámicamente con bucle (foreach), escalables y responsive.
-
-Fondo de bloques y estilos de lista personalizados.
-
-Footer y enlaces correctamente posicionados.
