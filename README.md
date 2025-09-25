@@ -130,6 +130,36 @@ Asegúrate de tener un usuario activo en la tabla `usuarios`:
   - Fondo de bloques y estilos de lista personalizados.
   - Footer y enlaces correctamente posicionados. 
 
+- Fecha 22/09/2025
+### 1. Modificación del View.php
+- Automáticamente llama a getUserInfo($_SESSION['id_user']) si hay sesión.
+  - Captura $user y lo inyecta en todas las vistas (top_menu.php, sidebar_menu.php, etc.).
+  - Renderiza la plantilla principal (Main.php) con contenido y menús.
+  - Vista solo recibe variables preparadas ($user, $pageTitle, $productos, etc.).
+  - Ahora Modelo nunca interactúa con la sesión ni con la vista. 
+  - vista nunca toca $pdo ni hace consultas.
+ 
+
+### 2. Se agrego modulo Cambiar contraseña
+  - Se realizo todas sus funciones
+  - Se proceso cambio de contraseña
+  - Se modifico sidebar_menu.php para agregar ítems nuevos
+  - Los querys usan parámetros para evitar inyección sql y las clases siguen un enfoque MVC puro con inyección de dependencia, POO puro.
+  - Se modificaron los controllers para que el render View.php se el proveedor de inicio de sesión y variables guardadas
+  - Se agregaron ChangeUserController.php en el controlador y Usuarios/CambiarContrasena.php en la vista
+	
+ 🔑 Beneficios de este enfoque
+  - Seguridad: ningún controlador privado funciona sin sesión activa.
+  - Centralización: toda la lógica de sesión y usuario se maneja en View::render y el router.
+  - Reusabilidad: $user y menús están disponibles en todas las vistas automáticamente.
+  - Simplicidad en CRUD: solo necesitas pasar $pdo al modelo; las vistas no se complican.
+  - Seguimiento: de ahora en mas ya podemos empezar a terminar el proyecto
+
+- Fecha 24/09/2025
+### 1. Se agrego funciones de usuarios.
+  - Se agregaron funciones básicas de gestión usuarios listados y crud
+  - Se agregaron perfiles de usuario y edición 
+
 ---
 
 ## 📖 Créditos

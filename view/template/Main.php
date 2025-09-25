@@ -1,19 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
     <title>Sysweb - Menú Principal</title>
-    <link rel="shortcut icon" href="assets/img/favicon.ico" />
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/plugins/font-awesome-4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/css/style.css" rel="stylesheet" type="text/css" />
-    <link href="assets/plugins/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
-    <link href="assets/plugins/datepicker/datepicker.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/plugins/chosen/css/chosen.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/css/skins/skin-blue.min.css" rel="stylesheet" type="text/css" />
+    <!-- incluimos aquí el archivo de scripts y estilos. -->
+    <?php include 'assets/includes/scripts_y_estilos.php'; ?>
 </head>
+
 <body class="skin-blue fixed">
     <div class="wrapper">
         <header class="main-header">
@@ -63,15 +58,6 @@
             </div>
         </div>
     </div>
-    <script src="assets/plugins/jQuery/jQuery-2.1.3.min.js"></script>
-    <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="assets/plugins/datepicker/bootstrap-datepicker.min.js" type="text/javascript"></script>
-    <script src="assets/plugins/chosen/js/chosen.jquery.min.js"></script>
-    <script src="assets/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
-    <script src="assets/plugins/slimScroll/jquery.slimscroll.js" type="text/javascript"></script>
-    <script src="assets/plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
-    <script src="assets/plugins/fastclick/fastclick.min.js" type="text/javascript"></script>
-    <script src="assets/js/jquery.maskMoney.min.js" type="text/javascript"></script>
-    <script src="assets/js/app.js" type="text/javascript"></script>
 </body>
+
 </html>

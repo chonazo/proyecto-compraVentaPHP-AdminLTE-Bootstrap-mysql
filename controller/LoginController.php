@@ -12,9 +12,15 @@ class LoginController {
     public function login() {
 
         // Evitamos el cacheo de la página de login
-        header("Cache-Control: no-cache, no-store, must-revalidate");
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
         header("Pragma: no-cache");
-        header("Expires: 0");
+        header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+
+        if (isset($_SESSION['id_user'])) {
+            header("Location: index.php?controller=Dashboard&action=index&alert=session_active");
+            exit();
+        }
 
         // Si es una petición POST, procesamos el formulario de login
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -22,8 +28,7 @@ class LoginController {
             $password = trim($_POST['password'] ?? '');
 
             if (empty($username) || empty($password)) {
-                $_SESSION['alert'] = 1; // 1 - para error de login
-                header("Location: index.php");
+                header("Location: index.php?alert=4");
                 exit();
             }
 
@@ -31,6 +36,7 @@ class LoginController {
             $data = $this->userModel->authenticate($username, $md5Password);
 
             if ($data) {
+                $_SESSION['alert'] = 'welcome';  //session alert de bienvenida
                 // Guardamos estos datos en la session
                 $_SESSION['id_user'] = $data['id_user'];
                 $_SESSION['username'] = $data['username'];
@@ -41,7 +47,7 @@ class LoginController {
                 exit();
             } else {
                 $_SESSION['alert'] = 1; // 1 - para error de login
-                header("Location: index.php");
+                header("Location: index.php?alert=1");
                 exit();
             }
         }
@@ -50,9 +56,8 @@ class LoginController {
         require_once __DIR__ . '/../view/Login.php';
     }
 
-    public function logout() {
-
-        session_start();
+    public function logout()
+    {
         session_unset();
         // Destruimos la sesión por completo.
         session_destroy();

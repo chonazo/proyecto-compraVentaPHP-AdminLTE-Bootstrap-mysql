@@ -1,36 +1,45 @@
 <?php
+require_once __DIR__ . '/../model/UserModel.php';
 
 class View {
     public static function render($viewName, $data = []) {
-        // Extraemos los datos para que sean accesibles como variables disponibles en la vista.
+        global $pdo; // usamos la conexión global
+
+        // Extraemos datos manuales
         extract($data);
 
-        // Definimos la ruta de la vista de contenido
+        // Inyectamos automáticamente $user si hay sesión activa
+        if (isset($_SESSION['id_user'])) {
+            if (!isset($user)) {
+                $userModel = new UserModel($pdo);
+                $user = $userModel->getUserInfo($_SESSION['id_user']);
+            }
+        }
+
+        // Ruta de la vista de contenido
         $contentViewPath = __DIR__ . "/../view/{$viewName}.php";
 
-        // Verificamos si el archivo de la vista de contenido existe
         if (!file_exists($contentViewPath)) {
-            // Manejamos un error si la vista no existe            
-            echo "Error: Vista '{$viewName}' no encontrada.";
+            echo "Error: Vista '{$viewName}' no encontrada en la ruta {$contentViewPath}";
             return;
         }
 
-        // Capturamos el HTML de la vista de contenido (dashboard.php)
+        // Vista de contenido
         ob_start();
         include $contentViewPath;
         $pageContent = ob_get_clean();
 
-        // Usamos la captura de salida para el menú superior
+        // Menú superior
         ob_start();
         include __DIR__ . '/../view/template/top_menu.php';
         $topMenu = ob_get_clean();
 
-        // Usamos la captura de salida para el menú lateral
+        // Menú lateral
         ob_start();
         include __DIR__ . '/../view/template/sidebar_menu.php';
         $sidebarMenu = ob_get_clean();
 
-        // Incluimos la plantilla principal (Main.php) que tiene el layout completo
+        // Plantilla principal
         include __DIR__ . '/../view/template/Main.php';
     }
 }

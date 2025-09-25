@@ -5,14 +5,13 @@ session_start();
 // Cargamos la conexión a la bd
 require_once 'config/Conexion.php';
 
-/* 1. Contrimos el nombre de las clases automaticamente.
-Este metodo va construir el nombre de nuestras clases y los va a buscar en las carpetas controller y model*/
+// 1. Metodo de autocarga de clases para cargar controladores y modelos en automatico
 spl_autoload_register(function ($className) {
-    // definimos las carpetas donde buscar las clases
-    $folders = ['controller', 'model'];
+    
+    $folders = ['controller', 'model'];// definimos las carpetas donde buscar las clases
 
     foreach ($folders as $folder) {//Buscamos en cada carpeta si existen las clases esto cosntruira por ejemplo 'controller/UserController.php'
-        $path = $folder . '/' . $className . '.php';
+        $path = $folder . '/' . $className . '.php'; 
         if (file_exists($path)) {
             require_once $path;
             return;
@@ -35,9 +34,9 @@ $publicControllers = ['Login'];
 if (!in_array($controllerName, $publicControllers) && !isset($_SESSION['id_user'])) {// Se usa id_user para mayor seguridad en ves de username
     header("Location: index.php?controller=Login&action=login&alert=3");// Si no está logueado y no está intentando acceder a un controlador público
     exit();
-}
+} 
 
-// 5. realizamos la logica del enrutador
+// 4. realizamos la logica del enrutador
 if (class_exists($controllerClass) && method_exists($controllerClass, $action)) { //verificamos que la clase y el metodo existan
     
     try { // usamos el 'try-catch' para manejar si el constructor requiere la conexión o no
@@ -51,10 +50,10 @@ if (class_exists($controllerClass) && method_exists($controllerClass, $action)) 
         $controller = new $controllerClass();
     }
     
-    // 6. Ejecutamos la accion del controlador
+    // 5. Ejecutamos la accion del controlador
     $controller->$action();
 } else {
-    // 7. Si el controlador o la acción no existen redirigir al login
+    // 6. Si el controlador o la acción no existen redirigir al login
     header("Location: index.php?controller=Login&action=login&error=not_found");
     exit();
 }

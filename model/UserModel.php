@@ -1,6 +1,5 @@
 <?php
-class UserModel
-{
+class UserModel {
     private $conn;
 
     public function __construct(PDO $conn) {
