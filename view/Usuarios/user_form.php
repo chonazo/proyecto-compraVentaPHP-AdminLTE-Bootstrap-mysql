@@ -1,6 +1,6 @@
 <?php
 
-$form_action = isset($usuario) 
+$form_action = isset($usuario)
     ? 'index.php?controller=Usuarios&action=update'
     : 'index.php?controller=Usuarios&action=insert';
 

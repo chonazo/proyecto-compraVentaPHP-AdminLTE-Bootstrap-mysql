@@ -23,7 +23,7 @@ $currentAction = $_GET['action'] ?? 'index';
                 <i class="fa fa-car" aria-hidden="true"></i><span>Referenciales generales</span><i class="fa fa-angle-left pull-right"></i>
             </a>
             <ul class="treeview-menu">
-                <li class="<?= ($currentController == 'Departamento') ? 'active' : '' ?>"><a href="index.php?controller=Departamento&action=index"><i class="fa fa-circle-o"></i>Departamento</a></li>
+                <li class="<?= ($currentController == 'Departamento') ? 'active' : '' ?>"><a href="index.php?controller=Departament&action=indexDepartament"><i class="fa fa-circle-o"></i>Departamento</a></li>
                 <li class="<?= ($currentController == 'Ciudad') ? 'active' : '' ?>"><a href="index.php?controller=Ciudad&action=index"><i class="fa fa-circle-o"></i>Ciudad</a></li>
             </ul>
         </li>

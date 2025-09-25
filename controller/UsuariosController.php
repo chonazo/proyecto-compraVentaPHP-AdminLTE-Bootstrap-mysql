@@ -4,11 +4,17 @@ require_once __DIR__ . '/../model/UsuariosModel.php';
 
 
 class UsuariosController {
+    
     private $usuariosModel;
 
-    public function __construct(PDO $conn)  {
+    public function __construct(PDO $conn) {
         $this->usuariosModel = new UsuariosModel($conn);
     }
+
+
+    /* Seccion de vistas de usuarios
+    =============================================================================
+    */
 
     // Mostrar formulario de cambio de contraseña
     public function indexPass() {
@@ -59,26 +65,48 @@ class UsuariosController {
 
     // formulario de editar usuario
     public function indexFormEdit() {
-    if (!isset($_SESSION['id_user'])) {
-        header("Location: index.php?alert=3");
-        exit();
+        if (!isset($_SESSION['id_user'])) {
+            header("Location: index.php?alert=3");
+            exit();
+        }
+
+        if (!isset($_GET['id'])) {
+            header("Location: index.php?controller=Usuarios&action=indexUser&alert=9");
+            exit();
+        }
+
+        $id_user = intval($_GET['id']);
+        $usuario = $this->usuariosModel->getById($id_user);
+
+        $data = [
+            'Title'   => 'Editar Usuario',
+            'usuario' => $usuario
+        ];
+
+        View::render('usuarios/user_form', $data);
     }
 
-    if (!isset($_GET['id'])) {
-        header("Location: index.php?controller=Usuarios&action=indexUser&alert=9");
-        exit();
+    // Mostrar perfil de usuarios
+    public function indexPerfilUser() {
+        if (!isset($_SESSION['id_user'])) {
+            header("Location: index.php?alert=3");
+            exit();
+        }
+
+        $id_user = $_SESSION['id_user'];
+        $usuario = $this->usuariosModel->getById($id_user);
+
+        $data = [
+            'Title' => 'Perfil de Usuario',
+            'usuario' => $usuario
+        ];
+
+        View::render('usuarios/user_perfil', $data);
     }
 
-    $id_user = intval($_GET['id']);
-    $usuario = $this->usuariosModel->getById($id_user);
-
-    $data = [
-        'Title'   => 'Editar Usuario',
-        'usuario' => $usuario
-    ];
-
-    View::render('usuarios/user_form', $data);
-}
+    /* Seccion de acciones de usuarios
+    =============================================================================
+    */
 
     public function updatePass() {
 
@@ -119,8 +147,7 @@ class UsuariosController {
         }
     }
 
-    public function toggleUserStatus()
-    {
+    public function toggleUserStatus() {
         if (!isset($_SESSION['id_user'])) {
             header("Location: index.php?alert=3");
             exit();
@@ -176,7 +203,7 @@ class UsuariosController {
         exit();
     }
 
-    // Método para manejar la actualización de usuarios existentes
+    // Actualización de usuarios existentes
     public function update() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['Guardar'])) {
             $id_user = trim($_POST['id_user']);
@@ -220,12 +247,12 @@ class UsuariosController {
                 }
             }
 
-            // Verificar si se proporcionó una nueva contraseña y hashearla
+            // Verificamos si se proporcionó una nueva contraseña y hashearla
             if (!empty($_POST['password'])) {
                 $new_password = md5(trim($_POST['password']));
             }
 
-            // Lógica para actualizar el usuario en el modelo
+            // Actualizamos el usuario en el modelo
             $result = $this->usuariosModel->updateUser($id_user, $username, $name_user, $email, $telefono, $permisos_acceso, $new_foto, $new_password);
 
             if ($result) {
@@ -233,6 +260,94 @@ class UsuariosController {
             } else {
                 header("Location: index.php?controller=Usuarios&action=edit&id=$id_user&alert=8"); // Error
             }
+        }
+        exit();
+    }
+
+    public function modificarPerfil() {
+        // 1. Verificación de la solicitud y de la sesión
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['Guardar'])) {
+            header("Location: index.php?controller=Usuarios&action=indexPerfilUser&alert=5");
+            exit();
+        }
+
+        // 2. Validación de ID del usuario para evitar suplantación
+        if (!isset($_SESSION['id_user']) || !isset($_POST['id_user']) || $_SESSION['id_user'] != $_POST['id_user']) {
+            header("Location: index.php?alert=3"); // O una alerta de seguridad más específica
+            exit();
+        }
+
+        // 3. Asignación de variables
+        $id_user = intval($_POST['id_user']);
+        $username = trim($_POST['username']);
+        $name_user = trim($_POST['name_user']);
+        $email = trim($_POST['email']);
+        $telefono = trim($_POST['telefono']);
+
+        // Obtener la información actual del usuario
+        $usuario_actual = $this->usuariosModel->getById($id_user);
+        $foto = $usuario_actual['foto'];
+
+        // 4. Lógica de manejo de la foto
+        if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
+            $foto_temp = $_FILES['foto']['tmp_name'];
+            $foto_name = $_FILES['foto']['name'];
+            $foto_size = $_FILES['foto']['size'];
+
+            // Validamos tamaño
+            if ($foto_size > 1000000) { // 1 MB
+                header("Location: index.php?controller=Usuarios&action=indexPerfilUser&alert=3");
+                exit();
+            }
+
+            // Validamos tipo de archivo
+            $allowed_mime_types = ['image/jpeg', 'image/png', 'image/gif'];
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $file_mime_type = finfo_file($finfo, $foto_temp);
+            finfo_close($finfo);
+
+            if (!in_array($file_mime_type, $allowed_mime_types)) {
+                header("Location: index.php?controller=Usuarios&action=indexPerfilUser&alert=4");
+                exit();
+            }
+
+            // Eliminamos foto antigua si existe
+            if (!empty($usuario_actual['foto'])) {
+                $old_photo_path = 'images/user/' . $usuario_actual['foto'];
+                if (file_exists($old_photo_path) && is_file($old_photo_path)) {
+                    unlink($old_photo_path);
+                }
+            }
+
+            // Generamos un nombre único para la nueva imagen
+            $extension = pathinfo($foto_name, PATHINFO_EXTENSION);
+            $new_filename = md5(uniqid(rand(), true)) . '.' . $extension;
+            $upload_path = 'images/user/' . $new_filename;
+
+            if (move_uploaded_file($foto_temp, $upload_path)) {
+                $foto = $new_filename;
+            } else {
+                header("Location: index.php?controller=Usuarios&action=indexPerfilUser&alert=2");
+                exit();
+            }
+        }
+
+        // 5. Preparamos los datos y llamar al modelo
+        $data_to_update = [
+            'id_user' => $id_user,
+            'username' => $username,
+            'name_user' => $name_user,
+            'email' => $email,
+            'telefono' => $telefono,
+            'foto' => $foto
+        ];
+
+        $result = $this->usuariosModel->updateProfile($data_to_update);
+
+        if ($result) {
+            header("Location: index.php?controller=Usuarios&action=indexPerfilUser&alert=1");
+        } else {
+            header("Location: index.php?controller=Usuarios&action=indexPerfilUser&alert=5");
         }
         exit();
     }

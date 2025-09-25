@@ -82,7 +82,7 @@ class UsuariosModel {
         // Inicializamos la consulta SQL
         $sql = "UPDATE usuarios SET username = :username, name_user = :name_user, email = :email, telefono = :telefono, permisos_acceso = :permisos_acceso, foto = :foto";
 
-        // Si se proporcionó una nueva contraseña, la agregamos a la consulta
+        // Si se proporcionó una nueva contraseña, le agregamos a la consulta
         if ($new_password !== null) {
             $sql .= ", password = :password";
         }
@@ -106,4 +106,28 @@ class UsuariosModel {
 
         return $stmt->execute();
     }
+
+    public function updateProfile($data) {
+        try {
+            $sql = "UPDATE usuarios SET username = :username, name_user = :name_user, email = :email, telefono = :telefono, foto = :foto WHERE id_user = :id_user";
+
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bindParam(':username', $data['username'], PDO::PARAM_STR);
+            $stmt->bindParam(':name_user', $data['name_user'], PDO::PARAM_STR);
+            $stmt->bindParam(':email', $data['email'], PDO::PARAM_STR);
+            $stmt->bindParam(':telefono', $data['telefono'], PDO::PARAM_STR);
+            $stmt->bindParam(':foto', $data['foto'], PDO::PARAM_STR);
+            $stmt->bindParam(':id_user', $data['id_user'], PDO::PARAM_INT);
+
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            // Manejo de errores
+            error_log("Error en updateProfile: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+
+    
 }

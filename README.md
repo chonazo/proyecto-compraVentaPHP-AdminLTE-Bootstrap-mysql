@@ -131,7 +131,7 @@ Asegúrate de tener un usuario activo en la tabla `usuarios`:
   - Footer y enlaces correctamente posicionados. 
 
 - Fecha 22/09/2025
-### 1. Modificación del View.php
+### 4. Modificación del View.php
 - Automáticamente llama a getUserInfo($_SESSION['id_user']) si hay sesión.
   - Captura $user y lo inyecta en todas las vistas (top_menu.php, sidebar_menu.php, etc.).
   - Renderiza la plantilla principal (Main.php) con contenido y menús.
@@ -140,7 +140,7 @@ Asegúrate de tener un usuario activo en la tabla `usuarios`:
   - vista nunca toca $pdo ni hace consultas.
  
 
-### 2. Se agrego modulo Cambiar contraseña
+### 5. Se agrego modulo Cambiar contraseña
   - Se realizo todas sus funciones
   - Se proceso cambio de contraseña
   - Se modifico sidebar_menu.php para agregar ítems nuevos
@@ -156,9 +156,14 @@ Asegúrate de tener un usuario activo en la tabla `usuarios`:
   - Seguimiento: de ahora en mas ya podemos empezar a terminar el proyecto
 
 - Fecha 24/09/2025
-### 1. Se agrego funciones de usuarios.
+### 6. Se agrego funciones de usuarios.
   - Se agregaron funciones básicas de gestión usuarios listados y crud
   - Se agregaron perfiles de usuario y edición 
+
+- Fecha 25/09/2025
+### 7. Se agrego funciones de Departamentos.
+  - Se agregaron completo y estilos de Departamentos
+  
 
 ---
 

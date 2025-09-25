@@ -17,7 +17,7 @@ $permisos = htmlspecialchars($user['permisos_acceso'] ?? '');
         </li>
         <li class="user-footer">
             <div class="pull-left">
-                <a style="width:80px" href="index.php?controller=Profile&action=index" class="btn btn-default btn-flat">Perfil</a>
+                <a style="width:80px" href="index.php?controller=Usuarios&action=indexPerfilUser" class="btn btn-default btn-flat">Perfil</a>
             </div>
             <div class="pull-right">
                 <a style="width:80px" href="#" data-toggle="modal" data-target="#logout" class="btn btn-default btn-flat">Salir</a>
