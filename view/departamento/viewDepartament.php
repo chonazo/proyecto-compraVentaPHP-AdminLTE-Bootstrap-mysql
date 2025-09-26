@@ -6,8 +6,8 @@
     <br><br>
     <h1>
         <i class="fa fa-folder icon-title"></i>Datos de Departamentos
-        <a class="btn btn-primary bn-social pull-right" href="index.php?controller=Departament&action=indexForm"
-            title="Agregar" data-toggle="tooltip"><i class="fa fa-plus"></i>Agregar</a>
+        <a class="btn btn-primary bn-social pull-right" href="index.php?controller=Departament&action=indexFormAdd"
+            title="Agregar" data-toggle="tooltip"><i class="fa fa-plus"> </i> Agregar</a>
     </h1>
 </section>
 
@@ -22,7 +22,7 @@
                     1 => ['type' => 'success', 'text' => 'Los datos se han registrado correctamente.'],
                     2 => ['type' => 'success', 'text' => 'Los datos se han modificados correctamente.'],
                     3 => ['type' => 'success', 'text' => 'Los datos se han eliminado correctamente.'],
-                    4 => ['type' => 'danger', 'text' => 'No se pudo reaizar la operacion.'],
+                    4 => ['type' => 'danger', 'text' => 'No se pudo realizar la operación.'],
 
                 ];
 
@@ -58,12 +58,16 @@
                                     <tr>
                                         <td><?php echo htmlspecialchars($departamento['id_departamento']); ?></td>
                                         <td><?php echo htmlspecialchars($departamento['dep_descripcion']); ?></td>
-                                        <td style="display: flex; justify-content: space-around; width: 100px;">
-                                            <a class="btn btn-primary btn-sm" title="Editar" href="index.php?controller=Departament&action=editDepartament&id=<?php echo htmlspecialchars($departamento['id_departamento']); ?>">
+                                        <td style="display: flex; justify-content: center; align-items: center; gap: 5px;">
+                                            <a class="btn btn-primary btn-sm"
+                                                href="index.php?controller=Departament&action=indexFormEdit&id=<?= htmlspecialchars($departamento['id_departamento']); ?>"
+                                                title="Editar">
                                                 <i class="glyphicon glyphicon-edit" style="color:#fff"></i>
                                             </a>
-                                            <a class="btn btn-danger btn-sm" title="Eliminar" href="index.php?controller=Departament&action=deleteDepartament&id=<?php echo htmlspecialchars($departamento['id_departamento']); ?>"
-                                                onclick="return confirm('¿Estás seguro de eliminar este departamento?');">
+                                            <a class="btn btn-danger btn-sm"
+                                                href="index.php?controller=Departament&action=deleteDepartament&id=<?= htmlspecialchars($departamento['id_departamento']); ?>"
+                                                onclick="return confirm('¿Estás seguro de eliminar este departamento?');"
+                                                title="Eliminar">
                                                 <i class="glyphicon glyphicon-trash" style="color:#fff"></i>
                                             </a>
                                         </td>

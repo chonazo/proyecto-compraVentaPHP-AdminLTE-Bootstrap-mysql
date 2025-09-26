@@ -1,16 +1,16 @@
 <?php
-// Aqui se inicia la session del usuario, unico punto de entrada del usuario, todas las peticiones del usuario pasan por aqui index.php
+// Aquí se inicia la session del usuario, unico punto de entrada del usuario, todas las peticiones del usuario pasan por aqui index.php
 session_start();
 
 // Cargamos la conexión a la bd
 require_once 'config/Conexion.php';
 
-// 1. Metodo de autocarga de clases para cargar controladores y modelos en automatico
+// 1. Método de autocarga de clases para cargar controladores y modelos en automation
 spl_autoload_register(function ($className) {
     
     $folders = ['controller', 'model'];// definimos las carpetas donde buscar las clases
 
-    foreach ($folders as $folder) {//Buscamos en cada carpeta si existen las clases esto cosntruira por ejemplo 'controller/UserController.php'
+    foreach ($folders as $folder) {//Buscamos en cada carpeta si existen las clases esto construirá por ejemplo 'controller/UserController.php'
         $path = $folder . '/' . $className . '.php'; 
         if (file_exists($path)) {
             require_once $path;
@@ -36,7 +36,7 @@ if (!in_array($controllerName, $publicControllers) && !isset($_SESSION['id_user'
     exit();
 } 
 
-// 4. realizamos la logica del enrutador
+// 4. realizamos la lógica del enrutador
 if (class_exists($controllerClass) && method_exists($controllerClass, $action)) { //verificamos que la clase y el metodo existan
     
     try { // usamos el 'try-catch' para manejar si el constructor requiere la conexión o no

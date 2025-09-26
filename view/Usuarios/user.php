@@ -45,13 +45,13 @@
                     <table id="dataTables1" class="table table-bordered table-striped table-hover">
                         <thead>
                             <tr>
-                                <th class="center">No.</th>
-                                <th class="center">Foto</th>
-                                <th class="center">Nombre de usuario</th>
-                                <th class="center">Nombre</th>
-                                <th class="center">Permisos de acceso</th>
-                                <th class="center">Status</th>
-                                <th class="center"></th>
+                                <th>No.</th>
+                                <th>Foto</th>
+                                <th>Nombre de usuario</th>
+                                <th>Nombre</th>
+                                <th>Permisos de acceso</th>
+                                <th>Status</th>
+                                <th>Acción</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -66,10 +66,10 @@
                                             <img class='img-user' src='images/user/<?= htmlspecialchars($data['foto']) ?>' width='45'>
                                         <?php endif; ?>
                                     </td>
-                                    <td><?= htmlspecialchars($data['username']) ?></td>
-                                    <td><?= htmlspecialchars($data['name_user']) ?></td>
-                                    <td><?= htmlspecialchars($data['permisos_acceso']) ?></td>
-                                    <td class='center'><?= htmlspecialchars($data['status']) ?></td>
+                                    <td class='center'><?= htmlspecialchars($data['username']) ?></td>
+                                    <td class='center'><?= htmlspecialchars($data['name_user']) ?></td>
+                                    <td class='center'><?= htmlspecialchars($data['permisos_acceso']) ?></td>
+                                    <td class='center'>Acción</td>
                                     <td class='center' width='100'>
                                         <div>
                                             <?php if ($data['status'] === 'activo'): ?>

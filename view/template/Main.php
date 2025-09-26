@@ -35,7 +35,10 @@
             <?php echo $pageContent; ?>
         </div>
         <footer class="main-footer">
-            <strong>Copyright &copy; <?php echo date('Y') ?> <a href="#" target="_blank">Desarrollado por Chono Pesoa </a> </strong>
+            <div class="pull-right hidden-xs">
+                <p style="margin: 0;">Proyecto de LP3 - UTIC - 2do Año | Lic. Análisis de Sistemas Informática</p>               
+            </div>
+            <strong>Copyright &copy; <?php echo date('Y') ?> <a href="#" target="_blank">Desarrollado por Chono Pesoa</a></strong>
         </footer>
     </div>
 

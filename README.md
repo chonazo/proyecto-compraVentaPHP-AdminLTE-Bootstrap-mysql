@@ -21,27 +21,43 @@ Incluye un **módulo de autenticación de usuarios** con login/logout, manejo de
 
 ```
 .
-├── config/
-│   └── conexion.php          # Configuración y conexión PDO a MySQL
+sysweb/
 ├── controller/
-│   ├── DashboardController.php
-│   ├── LoginController.php
-│   └── MainController.php
+│   ├── CiudadController.php         (Controlador para la gestión de ciudades)
+│   ├── DashboardController.php      (Controlador para la página principal)
+│   ├── DepartamentController.php    (Controlador para la gestión de departamentos)
+│   ├── LoginController.php          (Controlador para el inicio y cierre de sesión)
+│   ├── MainController.php           (Controlador para la página de inicio general)
+│   └── UsuariosController.php       (Controlador para la gestión de usuarios)
+|
 ├── model/
-│   └── UserModel.php         # Consultas relacionadas a usuarios
+│   ├── CiudadModel.php
+│   ├── DepartamentoModel.php
+│   └── UsuarioModel.php
+|
 ├── view/
-│   ├── login.php             # Vista del login
-│   ├── dashboard.php         # Vista principal del sistema
-│   └── template/
-│       ├── main_menu.php     # Layout principal
-│       ├── sidebar_menu.php  # Menú lateral dinámico
-│       └── top_menu.php      # Menú superior con perfil/cerrar sesión
-├── core/
-│   └── View.php              # Motor de vistas
-├── assets/                   # CSS, JS, imágenes y plugins
-├── index.php                 # Enrutador principal del sistema
-└── README.md                 # Documentación del proyecto
-```
+│   ├── ciudad/
+│   │   ├── formCiudad.php
+│   │   └── viewCiudad.php
+│   ├── departamento/
+│   │   ├── formDepartamento.php
+│   │   └── viewDepartamento.php
+│   ├── usuarios/
+│   │   ├── changePass.php
+│   │   ├── user_form.php
+│   │   └── user_perfil.php
+│   ├── template/
+│   │   ├── Main.php
+│   │   ├── sidebar_menu.php
+│   │   └── top_menu.php
+│   └── pages/
+│       ├── dashboard.php
+│       └── login.php
+|
+├── public/
+│   ├── assets/
+│   └── index.php
+|
 
 ---
 
@@ -161,9 +177,11 @@ Asegúrate de tener un usuario activo en la tabla `usuarios`:
   - Se agregaron perfiles de usuario y edición 
 
 - Fecha 25/09/2025
-### 7. Se agrego funciones de Departamentos.
-  - Se agregaron completo y estilos de Departamentos
-  
+### 7. Se agrego funciones de Departamentos y ciudad.
+  - Se agregaron crud completo y estilos de Departamentos.
+  - Se agregaron crud completo y estilos de Ciudad.
+  - Se agrego descripciones en footer de Main.php para presentación.
+  - Se actualizo vista de estructura en README.dm para mejor posicionamiento. 
 
 ---
 
